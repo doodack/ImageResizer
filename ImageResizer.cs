@@ -13,12 +13,18 @@ namespace DigitalCreations
 		private readonly Image image;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ImageResizer"/> class.
+		/// Initializes a new instance of the <see cref="ImageResizer" /> class.
 		/// </summary>
 		/// <param name="sourcePath">The path to the source image.</param>
+		/// <exception cref="System.ArgumentNullException">The sourcePath argument is null.</exception>
 		/// <exception cref="System.IO.FileLoadException">The requested image could not be loaded.</exception>
 		public ImageResizer(string sourcePath)
 		{
+			if (sourcePath == null)
+			{
+				throw new ArgumentNullException("sourcePath");
+			}
+			
 			try
 			{
 				this.image = new Bitmap(sourcePath);
@@ -73,7 +79,8 @@ namespace DigitalCreations
 			int originalWidth = this.image.Width;
 			int originalHeight = this.image.Height;
 
-			if ((!maxHeight.HasValue && !maxWidth.HasValue) || (originalHeight <= maxHeight.Value && originalWidth <= maxWidth.Value))
+			if ((!maxHeight.HasValue && !maxWidth.HasValue) || 
+				((maxHeight.HasValue && originalHeight <= maxHeight.Value) && (maxWidth.HasValue && originalWidth <= maxWidth.Value)))
 			{
 				return this.image;
 			}
